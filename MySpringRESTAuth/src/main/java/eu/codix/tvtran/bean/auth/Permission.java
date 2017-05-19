@@ -8,7 +8,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Property of CODIX Bulgaria EAD
+ * Property of CODIX Bulgaria EA
  * Created by tvtran
  * Date:  4/7/2017
  */

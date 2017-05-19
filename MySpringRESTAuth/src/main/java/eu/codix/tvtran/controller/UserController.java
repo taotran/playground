@@ -1,9 +1,14 @@
 package eu.codix.tvtran.controller;
 
+import eu.codix.tvtran.service.user.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * Property of CODIX Bulgaria EAD
@@ -14,10 +19,21 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class UserController
 {
 
+  @Autowired
+  private UserService userService;
+
   @PreAuthorize("hasAnyRole('USER','ADMIN')")
-  @RequestMapping(path = "/ul", method = RequestMethod.GET)
-  public String getUserList()
+  @RequestMapping(path = "/user/list", method = RequestMethod.GET)
+  public String getUserList(ModelMap model, @RequestParam Integer page)
   {
+    final long count = userService.countAll();
+    if (page == null) {
+      page = 0;
+    }
+    model.addAttribute("count", count);
+    model.addAttribute("noOfPages", count / 20);
+    model.addAttribute("users", userService.findAll(new PageRequest(page, 20)));
+
     System.out.println("Inside user controller");
     return "userList";
   }

@@ -1,7 +1,8 @@
 import config.SpringTestConfig;
 import eu.codix.tvtran.config.AppConfig;
+import eu.codix.tvtran.config.MultiHttpSecurityConfig;
 import eu.codix.tvtran.config.PersistenceConfig;
-import eu.codix.tvtran.config.SecurityConfig;
+//import eu.codix.tvtran.config.SecurityConfig;
 import eu.codix.tvtran.config.SpringMVCConfig;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
@@ -14,7 +15,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
  */
 @WebAppConfiguration
 @ContextConfiguration (
-    classes = {SecurityConfig.class, SpringTestConfig.class, AppConfig.class, SpringMVCConfig.class, PersistenceConfig.class}
+    classes = {MultiHttpSecurityConfig.class, SpringTestConfig.class, AppConfig.class, SpringMVCConfig.class, PersistenceConfig.class}
 )
 public class MyTestBase extends AbstractTestNGSpringContextTests
 {

@@ -11,6 +11,6 @@ public class WebSecurityInitializer extends AbstractSecurityWebApplicationInitia
 {
   public WebSecurityInitializer()
   {
-    super(SecurityConfig.class);
+    super(MultiHttpSecurityConfig.class);
   }
 }

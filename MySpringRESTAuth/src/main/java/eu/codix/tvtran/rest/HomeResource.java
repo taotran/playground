@@ -19,7 +19,8 @@ public class HomeResource
 {
 
 //  @PreAuthorize("hasPermission()")
-  @PreAuthorize("hasAuthority('READ_USER')")
+//  @PreAuthorize("hasAuthority('UPDATE_USER')")
+  @PreAuthorize("hasRole('ROLE_ADMIN')")
   @GetMapping(path = "/testList")
   public List<String> getTestList() {
     return Arrays.asList("test", "test1", "test2");

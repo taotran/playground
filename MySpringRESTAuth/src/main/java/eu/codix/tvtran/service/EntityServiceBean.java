@@ -61,4 +61,8 @@ public class EntityServiceBean<T extends AbstractEntity> implements EntityServic
   {
     entityRepository.delete(t);
   }
+
+  public long countAll() {
+    return entityRepository.count();
+  }
 }

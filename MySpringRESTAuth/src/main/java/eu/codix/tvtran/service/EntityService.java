@@ -23,4 +23,5 @@ public interface EntityService<T extends AbstractEntity>
 
   void delete(T t);
 
+  long countAll();
 }

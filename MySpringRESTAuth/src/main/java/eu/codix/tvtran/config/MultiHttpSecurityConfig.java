@@ -1,14 +1,19 @@
 package eu.codix.tvtran.config;
 
+import eu.codix.tvtran.config.auth.CustomAuthenticationProvider;
+import eu.codix.tvtran.config.auth.CustomBasicAuthenticationEntryPoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 /**
@@ -30,27 +35,65 @@ public class MultiHttpSecurityConfig
     return authService;
   }
 
+  @Bean(name = "myAuthProvider")
+  public DaoAuthenticationProvider authProvider()
+  {
+    CustomAuthenticationProvider authenticationProvider = new CustomAuthenticationProvider();
+    authenticationProvider.setUserDetailsService(userDetailsService());
+    return authenticationProvider;
+  }
+
   @Configuration
   @Order(1)
   public static class ApiWebSecurityConfigurationAdapter extends WebSecurityConfigurerAdapter
   {
+    private static String REALM = "MY_TEST_REALM";
+
+    @Autowired
+    private @Qualifier("myAuthProvider")
+    DaoAuthenticationProvider authProvider;
+
+    @Autowired
+    public void configure(AuthenticationManagerBuilder auth)
+    {
+      auth.authenticationProvider(authProvider);
+    }
+
     @Override
     protected void configure(HttpSecurity http) throws Exception
     {
       //@formatter:off
       http
-          .antMatcher("/svc/**")
-          .authorizeRequests()
-              .anyRequest().hasAnyRole("USER", "ADMIN")
-              .and()
-          .httpBasic();
+          .antMatcher("/svc/**").authorizeRequests().anyRequest().hasRole("ADMIN")
+          .and()
+              .httpBasic().realmName(REALM).authenticationEntryPoint(getBasicAuthenticationEntryPoint())
+          .and()
+              .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+          .and()
+              .csrf().disable()
+      ;
       //@formatter:on
+    }
+
+    @Bean
+    public CustomBasicAuthenticationEntryPoint getBasicAuthenticationEntryPoint()
+    {
+      return new CustomBasicAuthenticationEntryPoint();
     }
   }
 
   @Configuration
   public static class FormLoginWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter
   {
+    @Autowired
+    private @Qualifier("myAuthProvider")
+    DaoAuthenticationProvider authProvider;
+
+    @Autowired
+    public void configure(AuthenticationManagerBuilder auth)
+    {
+      auth.authenticationProvider(authProvider);
+    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception
@@ -59,8 +102,13 @@ public class MultiHttpSecurityConfig
       http
           .authorizeRequests()
               .anyRequest().authenticated()
-              .and()
-          .formLogin();
+      .and()
+          .formLogin()
+      .and()
+          .logout().logoutUrl("/logout")
+      .and()
+          .csrf().disable()
+      ;
       //@formatter:on
     }
   }

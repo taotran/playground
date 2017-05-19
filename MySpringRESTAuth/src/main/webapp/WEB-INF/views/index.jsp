@@ -50,7 +50,11 @@
 <%--</nav>--%>
 <div>
     <form>
-        <a href="<c:url value="/ul" />" >User List</a>
+        <a href="<c:url value="/user/list" />" >User List</a>
+        |
+        <a href="<c:url value="/logout" />" >LOGOUT</a>
+        |
+        <a href="<c:url value="/svc/testList" />" >TEST LIST</a>
     </form>
 </div>
 <div class="container" style="margin-top:50px;">

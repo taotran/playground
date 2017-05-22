@@ -38,6 +38,7 @@ public class MultiHttpSecurityConfig
   @Bean(name = "myAuthProvider")
   public DaoAuthenticationProvider authProvider()
   {
+
     CustomAuthenticationProvider authenticationProvider = new CustomAuthenticationProvider();
     authenticationProvider.setUserDetailsService(userDetailsService());
     return authenticationProvider;

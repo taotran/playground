@@ -10,11 +10,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.util.Assert;
 
 /**
  * Property of CODIX Bulgaria EAD
@@ -22,6 +24,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
  * Date:  5/18/2017
  */
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 @ComponentScan(basePackages = "eu.codix")
 public class MultiHttpSecurityConfig
 {
@@ -65,7 +68,7 @@ public class MultiHttpSecurityConfig
     {
       //@formatter:off
       http
-          .antMatcher("/svc/**").authorizeRequests().anyRequest().hasRole("ADMIN")
+          .antMatcher("/svc/**").authorizeRequests().anyRequest().authenticated()
           .and()
               .httpBasic().realmName(REALM).authenticationEntryPoint(getBasicAuthenticationEntryPoint())
           .and()
@@ -86,9 +89,15 @@ public class MultiHttpSecurityConfig
   @Configuration
   public static class FormLoginWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter
   {
+    private final DaoAuthenticationProvider authProvider;
+
     @Autowired
-    private @Qualifier("myAuthProvider")
-    DaoAuthenticationProvider authProvider;
+    public FormLoginWebSecurityConfigurerAdapter(@Qualifier("myAuthProvider")
+                                                     DaoAuthenticationProvider authProvider)
+    {
+      Assert.notNull(authProvider);
+      this.authProvider = authProvider;
+    }
 
     @Autowired
     public void configure(AuthenticationManagerBuilder auth)

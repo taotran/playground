@@ -1,0 +1,41 @@
+<html>
+<head>
+    <title>Login failed</title>
+    <script src="../js/jquery-1.11.1.js" ></script>
+
+    <script language="javascript">
+        $(document).ready(function(){
+//            alert('text test');
+            $('#nextPageRef').click(function() {
+                alert('Next Page Ref has been clicked');
+            })
+        });
+
+        $(window).scroll(function() {
+            if($(window).scrollTop() == $(document).height() - $(window).height()) {
+                // ajax call get data from server and append to the div
+                alert('you reached end!!!')
+            }
+        });
+    </script>
+</head>
+
+<body>
+
+This is user list page <br/>
+
+<a id="nextPageRef" href="#">1</a>
+
+<div style="width: 500px; height: 1000px;">
+    fldskajf
+</div>
+
+<br/>
+This is another test
+
+
+
+
+
+</body>
+</html>

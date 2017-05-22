@@ -21,5 +21,23 @@ public interface PermissionRepository extends EntityRepository<Permission>
   ) //@formatter:on
   List<Permission> findUserPermission(String username);
 
+  //@formatter:off
+  @Query(value =    "SELECT p.name                                            "
+                  + "  FROM permission p                                      "
+                  + " INNER JOIN rolepermission rp ON rp.permissionId = p.id  "
+                  + " INNER JOIN role r ON rp.roleId = r.id                   "
+                  + " INNER JOIN userrole ur ON ur.roleId = r.id              "
+                  + " INNER JOIN USER u ON ur.userId = u.id                   "
+                  + " WHERE u.username = ?1                                   "
+                  + "UNION                                                    "
+                  + "SELECT r.name                                            "
+                  + "  FROM role r                                            "
+                  + "  JOIN userrole ur ON ur.roleid = r.id                   "
+                  + "  JOIN USER u ON ur.userId = u.id                        "
+                  + " WHERE u.username = ?1                                   "
+  , nativeQuery = true)
+  //@formatter:on
+  List<String> findAuthorities(String username);
+
   Permission findByName(String name);
 }

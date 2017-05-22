@@ -24,6 +24,11 @@ public class PermissionServiceBean extends EntityServiceBean<Permission> impleme
     return permissionRepository.findUserPermission(username);
   }
 
+  public List<String> findAllAuthorities(String username)
+  {
+    return permissionRepository.findAuthorities(username);
+  }
+
   public Permission findByName(String name)
   {
     return permissionRepository.findByName(name);

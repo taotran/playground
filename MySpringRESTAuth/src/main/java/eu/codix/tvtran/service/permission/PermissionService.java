@@ -14,6 +14,8 @@ public interface PermissionService extends EntityService<Permission>
 {
   List<Permission> findUserPermission(String username);
 
+  List<String> findAllAuthorities(String username);
+
   Permission findByName(String name);
 
 }

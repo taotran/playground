@@ -22,14 +22,18 @@ public class UserController
   @Autowired
   private UserService userService;
 
-  @PreAuthorize("hasAnyRole('USER','ADMIN')")
+//  @PreAuthorize("hasAuthority('UPDATE_USER')")
+  @PreAuthorize("hasAuthority('ROLE_ADMIN')")
   @RequestMapping(path = "/user/list", method = RequestMethod.GET)
-  public String getUserList(ModelMap model, @RequestParam Integer page)
+  public String getUserList(ModelMap model, @RequestParam(required = false) Integer page)
   {
-    final long count = userService.countAll();
+
     if (page == null) {
       page = 0;
     }
+
+    final long count = userService.countAll();
+
     model.addAttribute("count", count);
     model.addAttribute("noOfPages", count / 20);
     model.addAttribute("users", userService.findAll(new PageRequest(page, 20)));

@@ -1,6 +1,5 @@
 package eu.codix.tvtran.config.auth;
 
-import eu.codix.tvtran.bean.auth.Permission;
 import eu.codix.tvtran.service.permission.PermissionService;
 import eu.codix.tvtran.service.role.RoleService;
 import eu.codix.tvtran.service.user.UserService;
@@ -35,32 +34,30 @@ public class MyUserDetailsService implements UserDetailsService
   @Autowired
   private UserService userService;
 
-/*  public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException
-  {
-    final List<Permission> permissionsByUser = permissionService.findUserPermission("admin");
-    return new User("admin", "1234", getMyAuthoritiesFromPermissions(permissionsByUser));
-  }
-
-  private Set<GrantedAuthority> getMyAuthoritiesFromPermissions(List<Permission> permissions)
-  {
-    final Set<GrantedAuthority> authorities = new HashSet<GrantedAuthority>();
-    for (Permission permission : permissions) {
-      authorities.add(new SimpleGrantedAuthority(permission.getName()));
+  /*  public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException
+    {
+      final List<Permission> permissionsByUser = permissionService.findUserPermission("admin");
+      return new User("admin", "1234", getMyAuthoritiesFromPermissions(permissionsByUser));
     }
-    return authorities;
-  }
-*/
+
+    private Set<GrantedAuthority> getMyAuthoritiesFromPermissions(List<Permission> permissions)
+    {
+      final Set<GrantedAuthority> authorities = new HashSet<GrantedAuthority>();
+      for (Permission permission : permissions) {
+        authorities.add(new SimpleGrantedAuthority(permission.getName()));
+      }
+      return authorities;
+    }
+  */
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException
   {
-//  String ip = getClientIp();
-
     final eu.codix.tvtran.bean.auth.User user = userService.findByUsername(username);
 
     if (user == null) {
       throw new UsernameNotFoundException("User: '" + username + "' not found !");
     }
 
-    final List<Permission> permissionsByUser = permissionService.findUserPermission(username);
+    final List<String> authoritiesByUser = permissionService.findAllAuthorities(username);
     return new User
         (
             user.getUsername()
@@ -69,16 +66,16 @@ public class MyUserDetailsService implements UserDetailsService
             , user.isAccountNonExpired()
             , user.isCredentialsNonExpired()
             , user.isAccountNonLocked()
-            , getMyAuthoritiesFromPermissions(permissionsByUser)
+            , getMyAuthoritiesFromPermissions(authoritiesByUser)
         );
   }
 
-  private Set<GrantedAuthority> getMyAuthoritiesFromPermissions(List<Permission> permissions)
+  private Set<GrantedAuthority> getMyAuthoritiesFromPermissions(List<String> allAuthorities)
   {
-    final Set<GrantedAuthority> authorities = new HashSet<GrantedAuthority>();
-    for (Permission permission : permissions) {
-      authorities.add(new SimpleGrantedAuthority(permission.getName()));
+    final Set<GrantedAuthority> grantedAuthorities = new HashSet<GrantedAuthority>();
+    for (String auth : allAuthorities) {
+      grantedAuthorities.add(new SimpleGrantedAuthority(auth));
     }
-    return authorities;
+    return grantedAuthorities;
   }
 }

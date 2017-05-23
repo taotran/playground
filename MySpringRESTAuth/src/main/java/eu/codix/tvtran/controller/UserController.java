@@ -1,14 +1,17 @@
 package eu.codix.tvtran.controller;
 
+import eu.codix.tvtran.bean.auth.User;
 import eu.codix.tvtran.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * Property of CODIX Bulgaria EAD
@@ -22,7 +25,7 @@ public class UserController
   @Autowired
   private UserService userService;
 
-//  @PreAuthorize("hasAuthority('UPDATE_USER')")
+  //  @PreAuthorize("hasAuthority('UPDATE_USER')")
   @PreAuthorize("hasAuthority('ROLE_ADMIN')")
   @RequestMapping(path = "/user/list", method = RequestMethod.GET)
   public String getUserList(ModelMap model, @RequestParam(required = false) Integer page)
@@ -35,10 +38,19 @@ public class UserController
     final long count = userService.countAll();
 
     model.addAttribute("count", count);
-    model.addAttribute("noOfPages", count / 20);
-    model.addAttribute("users", userService.findAll(new PageRequest(page, 20)));
+    model.addAttribute("noOfPages", count / 30);
+    model.addAttribute("users", userService.findAll(new PageRequest(page, 30)));
 
     System.out.println("Inside user controller");
     return "userList";
+  }
+
+  @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+  @GetMapping(path = "/user/getUsers")
+  public @ResponseBody
+  List<User> getUsers(HttpServletRequest request, HttpServletResponse response) throws Exception
+  {
+    Integer page = request.getParameter("page") != null ? Integer.parseInt(request.getParameter("page")) : 0;
+    return userService.findAll(new PageRequest(page, 30));
   }
 }

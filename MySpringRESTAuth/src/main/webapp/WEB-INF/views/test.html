@@ -9,14 +9,26 @@
             $('#nextPageRef').click(function() {
                 alert('Next Page Ref has been clicked');
             })
+
+            $('.scrollableDiv').scroll(function() {
+                //alert('you are scrolling inside scrollableDiv');
+//                if($(this).scro) {
+//                    // ajax call get data from server and append to the div
+//                    alert('you reached end!!!')
+//                }
+                var scrollHeight = $(this).innerHeight();
+                console.log(scrollHeight);
+
+                $(".heightStatus").css("display", "inline").fadeOut("slow");
+
+                if($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight) {
+                    $(".status").css("display", "inline").fadeOut("slow");
+                }
+
+            });
         });
 
-        $(window).scroll(function() {
-            if($(window).scrollTop() == $(document).height() - $(window).height()) {
-                // ajax call get data from server and append to the div
-                alert('you reached end!!!')
-            }
-        });
+
     </script>
 </head>
 
@@ -26,12 +38,27 @@ This is user list page <br/>
 
 <a id="nextPageRef" href="#">1</a>
 
-<div style="width: 500px; height: 1000px;">
+<div class="scrollableDiv" style="width: 500px; height: 400px; overflow-y: scroll;">
     fldskajf
+    <div style="width: 100%; height: 390px;">
+        abcd
+    </div>
+    zzzz <br />
+    zzzz <br />
+    zzzz <br />
+    zzzz <br />
+    zzzz <br />
+    zzzz <br />
+    zzzz <br />
+    zzzz <br />
+    final zzzz <br />
 </div>
-
+<br />
+<br />
+<span class="heightStatus">ABCXYZ</span>
+<span class="status">You Reached End!!!</span>
 <br/>
-This is another test
+This is another text
 
 
 

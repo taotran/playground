@@ -17,7 +17,15 @@
 //            alert('text test');
             $('#nextPage').click(function () {
                 $.ajax({
-                    url: '/user/list?page=5'
+                    url: '/user/getUsers',
+                    contentType: "application/json; charset=utf-8",
+                    data: ({page: 5}),
+                    dataType: 'json',
+                    success: function (response) {
+                        console.log('TESTTTTTTTTTTTTTTTTT');
+                        var list = JSON.parse(response);
+                        console.log(list);
+                    }
                 })
             })
         });
@@ -27,16 +35,18 @@
 <body>
 
 This is user list page <br/>
-<c:forEach items="${users}" var="user">
-    ${user.username} <br/>
-</c:forEach>
-<a id="prevPage" href="#">Prev</a>
-<div id="userContainer">
-    <c:forEach var="i" begin="1" end="${noOfPages + 1}">
-        <a id="nextPageRef" href="<c:out value="/user/list?page=${i}"/>">${i}</a> |
-        <%--<a id="nextPageRef" href="#">${i}</a> |--%>
+<div id="userContainer" style="width: 100%; height: 400px; overflow-y: scroll;">
+    <c:forEach items="${users}" var="user">
+        ${user.username} <br/>
     </c:forEach>
 </div>
+<a id="prevPage" href="#">Prev</a>
+
+<c:forEach var="i" begin="1" end="${noOfPages + 1}">
+    <a id="nextPageRef" href="<c:out value="/user/list?page=${i}"/>">${i}</a> |
+    <%--<a id="nextPageRef" href="#">${i}</a> |--%>
+</c:forEach>
+
 <a id="nextPage" href="#">Next</a>
 <br/>
 <c:out value="Total number of Pages: ${noOfPages}"/>

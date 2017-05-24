@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -33,7 +34,12 @@ public class UserResource
   @GetMapping(path = "/userList")
   public List<User> getUsers(@RequestParam(value = "page", required = false) Integer page)
   {
-    return userService.findAll(new PageRequest(page, 30));
+    try {
+      return userService.findAll(new PageRequest(page, 30));
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    return new ArrayList<User>();
 
   }
 }

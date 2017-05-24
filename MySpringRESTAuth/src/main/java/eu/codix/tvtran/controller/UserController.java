@@ -46,7 +46,7 @@ public class UserController
   }
 
   @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-  @GetMapping(path = "/user/getUsers")
+  @GetMapping(path = "/user/getUsers", headers = "Accept=application/json")
   public @ResponseBody
   List<User> getUsers(HttpServletRequest request, HttpServletResponse response) throws Exception
   {

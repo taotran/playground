@@ -1,5 +1,6 @@
 package eu.codix.tvtran.bean.auth;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import eu.codix.tvtran.bean.AbstractEntity;
 import org.hibernate.validator.constraints.Length;
 
@@ -26,6 +27,7 @@ public class User
   @Column(name = "password", nullable = false)
   private String password;
 
+  @JsonIgnore
   @ManyToMany(targetEntity = Role.class, cascade = CascadeType.ALL)
   @JoinTable(
       name                = "UserRole",

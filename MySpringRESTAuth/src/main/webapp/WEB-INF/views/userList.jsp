@@ -16,16 +16,25 @@
         $(document).ready(function () {
 //            alert('text test');
             $('#nextPage').click(function () {
+                $('#userContainer').empty();
+                $('#ajaxLoading').css("display", "inline");
                 $.ajax({
-                    url: '/user/getUsers',
-                    contentType: "application/json; charset=utf-8",
-                    data: ({page: 5}),
-                    dataType: 'json',
-                    success: function (response) {
-                        console.log('TESTTTTTTTTTTTTTTTTT');
-                        var list = JSON.parse(response);
-                        console.log(list);
+                    url: '/user/getUsers?page=2',
+                    dataType: 'application/json',
+                    type: 'GET',
+                    complete: function (data) {
+                        console.log('test testtttt');
+                        var userList = JSON.parse(data.responseText);
+                        $.each(userList, function (i, item) {
+                            console.log(item);
+
+                            $('#userContainer').append(item.username);
+                            $('#userContainer').append('<br />');
+                            $('#ajaxLoading').css("display", "none");
+
+                        })
                     }
+
                 })
             })
         });
@@ -46,6 +55,7 @@ This is user list page <br/>
     <a id="nextPageRef" href="<c:out value="/user/list?page=${i}"/>">${i}</a> |
     <%--<a id="nextPageRef" href="#">${i}</a> |--%>
 </c:forEach>
+<img id="ajaxLoading" src="/images/hourglass.gif" style="display: none;"> <br />
 
 <a id="nextPage" href="#">Next</a>
 <br/>

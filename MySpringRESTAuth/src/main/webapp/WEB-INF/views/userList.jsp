@@ -28,8 +28,6 @@
                         console.log('test testtttt');
                         var userList = JSON.parse(data.responseText);
                         $.each(userList, function (i, item) {
-                            console.log(item);
-
                             $('#userContainer').append(item.username);
                             $('#userContainer').append('<br />');
                             $('#ajaxLoading').css("display", "none");

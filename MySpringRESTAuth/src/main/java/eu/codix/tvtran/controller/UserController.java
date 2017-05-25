@@ -50,6 +50,7 @@ public class UserController
   public @ResponseBody
   List<User> getUsers(HttpServletRequest request, HttpServletResponse response) throws Exception
   {
+//    Thread.sleep(3000);
     Integer page = request.getParameter("page") != null ? Integer.parseInt(request.getParameter("page")) : 0;
     return userService.findAll(new PageRequest(page, 30));
   }

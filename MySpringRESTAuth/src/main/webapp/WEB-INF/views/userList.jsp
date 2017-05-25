@@ -16,6 +16,8 @@
         $(document).ready(function () {
 //            alert('text test');
             $('#nextPage').click(function () {
+//                location.hash = "#page=5";
+                $('#nextPage').attr('href', '#page=5');
                 $('#userContainer').empty();
                 $('#ajaxLoading').css("display", "inline");
                 $.ajax({

@@ -1,14 +1,14 @@
 package eu.codix.tvtran.rest;
 
 import eu.codix.tvtran.bean.auth.User;
+import eu.codix.tvtran.config.MyLang;
 import eu.codix.tvtran.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.Assert;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,15 +31,23 @@ public class UserResource
     this.userService = userService;
   }
 
-  @GetMapping(path = "/userList")
-  public List<User> getUsers(@RequestParam(value = "page", required = false) Integer page)
+  @GetMapping(path = "/user")
+  public List<User> getUsers(@RequestParam(value = "page", required = false) Integer page, @MyLang String lang)
   {
     try {
+      System.out.println("lang = " + lang);
       return userService.findAll(new PageRequest(page, 30));
     } catch (Exception e) {
       e.printStackTrace();
     }
     return new ArrayList<User>();
 
+  }
+
+  @PostMapping(path = "/user")
+  @ResponseStatus(HttpStatus.CREATED)
+  @PreAuthorize("hasAuthority('CREATE_USER')")
+  public void addUser(@RequestBody User user) {
+    userService.save(user);
   }
 }

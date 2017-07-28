@@ -1,11 +1,15 @@
 package eu.codix.tvtran.config;
 
+import eu.codix.tvtran.config.resolver.MyLangArgumentResolver;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.*;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
+
+import java.util.List;
 
 /**
  * Property of CODIX Bulgaria EAD
@@ -22,6 +26,13 @@ public class SpringMVCConfig extends WebMvcConfigurerAdapter
   public ViewResolver viewResolver()
   {
     return new InternalResourceViewResolver("/WEB-INF/views/", ".jsp");
+  }
+
+  @Override
+  public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers)
+  {
+    argumentResolvers.add(new MyLangArgumentResolver());
+    super.addArgumentResolvers(argumentResolvers);
   }
 
   @Override

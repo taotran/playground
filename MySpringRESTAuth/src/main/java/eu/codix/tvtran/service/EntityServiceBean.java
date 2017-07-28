@@ -46,7 +46,7 @@ public class EntityServiceBean<T extends AbstractEntity> implements EntityServic
   @Transactional
   public T save(@Validated T t)
   {
-    if (findOne(t.getId()) == null) {
+    if (t.getId() == 0 || findOne(t.getId()) == null) {
       em.persist(t);
     }
     else {
